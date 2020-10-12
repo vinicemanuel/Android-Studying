@@ -2,6 +2,7 @@ package com.example.recicleview.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -9,8 +10,11 @@ import com.example.recicleview.R
 import com.example.recicleview.adapter.ClasseAdapter
 import com.example.recicleview.models.Classe
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.Console
 
 class MainActivity : AppCompatActivity() {
+
+    val TAG = "MainActivity"
 
     //porque sim, já tava chato toda hora trocar
     private val self = this
@@ -29,6 +33,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         this.setupRecyclerview()
+
+        this.addButton.setOnClickListener {
+            Log.d(TAG,"AQUI" )
+        }
     }
 
     private fun setupRecyclerview() {
