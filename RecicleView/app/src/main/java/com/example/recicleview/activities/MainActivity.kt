@@ -5,17 +5,16 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.recicleview.R
 import com.example.recicleview.adapter.ClasseAdapter
+import com.example.recicleview.adapter.ClasseSelection
 import com.example.recicleview.models.Classe
 import kotlinx.android.synthetic.main.activity_main.*
-import java.io.Console
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : ClasseSelection, AppCompatActivity() {
 
     val TAG = "MainActivity"
 
@@ -60,7 +59,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerview() {
-        self.adapter = ClasseAdapter(self.classlist, self)
+        self.adapter = ClasseAdapter(self, self.classlist, self)
         self.recycleView.adapter = self.adapter
         self.recycleView.addItemDecoration(DividerItemDecoration(self, DividerItemDecoration.VERTICAL))
         self.recycleView.layoutManager = LinearLayoutManager(self)
@@ -82,6 +81,10 @@ class MainActivity : AppCompatActivity() {
 
             }
         }
+    }
+
+    override fun clickAt(index: Int) {
+        Log.d(TAG, "${self.classlist[index].name}")
     }
 
 }

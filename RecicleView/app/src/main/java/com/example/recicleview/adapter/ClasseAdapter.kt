@@ -7,18 +7,28 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recicleview.R
+import com.example.recicleview.activities.MainActivity
 import com.example.recicleview.models.Classe
 import kotlinx.android.synthetic.main.classe_view.view.*
-import java.io.Console
 
-class ClasseAdapter(private val classes: List<Classe>,
+interface ClasseSelection {
+    fun clickAt(index: Int)
+}
+
+class ClasseAdapter(var classeSelection: ClasseSelection,
+                    private val classes: List<Classe>,
                     private val context: Context): RecyclerView.Adapter<ClasseAdapter.ClasseViewHolder>() {
 
     private val self = this
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ClasseViewHolder {
         val view = LayoutInflater.from(this.context).inflate(R.layout.classe_view, parent, false)
+
         val viewHolder = ClasseViewHolder(view)
+
+        viewHolder.itemView.setOnClickListener {
+            classeSelection.clickAt(viewHolder.adapterPosition)
+        }
 
         return  viewHolder
     }
