@@ -1,9 +1,11 @@
 package com.example.recicleview.activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.recicleview.R
@@ -35,7 +37,18 @@ class MainActivity : AppCompatActivity() {
         this.setupRecyclerview()
 
         this.addButton.setOnClickListener {
-            Log.d(TAG,"AQUI" )
+            self.add()
+        }
+    }
+
+    private fun add() {
+        val myIntent = Intent("CLASSE_DETAIL_NEW_ACTION")
+
+        if (myIntent.resolveActivity(packageManager) != null) {
+            startActivity(myIntent)
+        } else {
+            Toast.makeText(this, "Não foi encontrado uma activity para o " +
+                    "intent filter escolhido", Toast.LENGTH_SHORT).show()
         }
     }
 
