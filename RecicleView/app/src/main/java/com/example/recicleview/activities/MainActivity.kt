@@ -1,5 +1,6 @@
 package com.example.recicleview.activities
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -23,6 +24,12 @@ class MainActivity : AppCompatActivity() {
 
     private  lateinit var adapter: ClasseAdapter
 
+    companion object {
+        const val MAIN_ACTIVITY_NEW_CLASSE_REQUEST_CODE = 1
+        const val MAIN_ACTIVITY_EDIT_CLASSE_REQUEST_CODE = 2
+        const val MAIN_ACTIVITY_RESULT_ID = "CLASS_RESULT"
+    }
+
     val classlist = mutableListOf(
         Classe("turma 1", 2019),
         Classe("turma 2", 2019),
@@ -45,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         val myIntent = Intent("CLASSE_DETAIL_NEW_ACTION")
 
         if (myIntent.resolveActivity(packageManager) != null) {
-            startActivity(myIntent)
+            startActivityForResult(myIntent, MAIN_ACTIVITY_NEW_CLASSE_REQUEST_CODE)
         } else {
             Toast.makeText(this, "Não foi encontrado uma activity para o " +
                     "intent filter escolhido", Toast.LENGTH_SHORT).show()
@@ -57,6 +64,24 @@ class MainActivity : AppCompatActivity() {
         self.recycleView.adapter = self.adapter
         self.recycleView.addItemDecoration(DividerItemDecoration(self, DividerItemDecoration.VERTICAL))
         self.recycleView.layoutManager = LinearLayoutManager(self)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == Activity.RESULT_OK) {
+
+            if (requestCode == MAIN_ACTIVITY_NEW_CLASSE_REQUEST_CODE) {
+
+                data?.getParcelableExtra<Classe>(MAIN_ACTIVITY_RESULT_ID)?.let {
+                    classlist.add(0,it)
+                    adapter.notifyDataSetChanged()
+                }
+
+            } else if (requestCode == MAIN_ACTIVITY_EDIT_CLASSE_REQUEST_CODE) {
+
+            }
+        }
     }
 
 }
