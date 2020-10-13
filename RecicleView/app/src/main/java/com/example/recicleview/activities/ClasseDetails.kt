@@ -12,9 +12,17 @@ class ClasseDetails : AppCompatActivity() {
 
     val self = this
 
+    private lateinit var classe: Classe
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_class_details)
+        
+        intent.getParcelableExtra<Classe>(MainActivity.MAIN_ACTIVITY_RESULT_ID)?.let {
+            self.nameEditText.setText(it.name)
+            self.yearEditText.setText(it.ano.toString())
+            classe = it
+        }
 
         self.saveButton.setOnClickListener {
             self.save()
@@ -36,10 +44,21 @@ class ClasseDetails : AppCompatActivity() {
         val name = self.nameEditText.text.toString()
         val year = self.yearEditText.text.toString().toInt()
 
-        val newClasse = Classe(name, year)
+        if (self.classe == null) {
+
+            val newClasse = Classe(name, year)
+            self.saveClasse(newClasse)
+        } else {
+            self.classe!!.name = name
+            self.classe!!.ano = year
+            self.saveClasse(self.classe!!)
+        }
+    }
+
+    private fun saveClasse(classe: Classe) {
 
         val returnIntent = Intent()
-        returnIntent.putExtra(MainActivity.MAIN_ACTIVITY_RESULT_ID, newClasse)
+        returnIntent.putExtra(MainActivity.MAIN_ACTIVITY_RESULT_ID, classe)
         setResult(Activity.RESULT_OK, returnIntent)
         finish()
     }

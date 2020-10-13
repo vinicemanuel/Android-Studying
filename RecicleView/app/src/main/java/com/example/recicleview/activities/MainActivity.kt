@@ -71,20 +71,28 @@ class MainActivity : ClasseSelection, AppCompatActivity() {
         if (resultCode == Activity.RESULT_OK) {
 
             if (requestCode == MAIN_ACTIVITY_NEW_CLASSE_REQUEST_CODE) {
-
                 data?.getParcelableExtra<Classe>(MAIN_ACTIVITY_RESULT_ID)?.let {
                     classlist.add(0,it)
                     adapter.notifyDataSetChanged()
                 }
 
             } else if (requestCode == MAIN_ACTIVITY_EDIT_CLASSE_REQUEST_CODE) {
-
+                data?.getParcelableExtra<Classe>(MAIN_ACTIVITY_RESULT_ID)?.let { classe ->
+                    val index = self.classlist.indexOfFirst {filterClasse ->
+                        filterClasse.classeID == classe.classeID
+                    }
+                    self.classlist[index] = classe
+                    adapter.notifyDataSetChanged()
+                }
             }
         }
     }
 
     override fun clickAt(index: Int) {
-        Log.d(TAG, "${self.classlist[index].name}")
+//        Log.d(TAG, "${self.classlist[index].name}")
+        val myIntent = Intent("CLASSE_DETAIL_EDIT_ACTION")
+        myIntent.putExtra(MAIN_ACTIVITY_RESULT_ID, self.classlist[index])
+        startActivityForResult(myIntent, MAIN_ACTIVITY_EDIT_CLASSE_REQUEST_CODE)
     }
 
 }
