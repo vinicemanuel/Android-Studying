@@ -2,6 +2,9 @@ package com.example.recicleview.activities
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -81,6 +84,32 @@ class MainActivity : ClasseSelection, AppCompatActivity() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 classlist.removeAt(viewHolder.adapterPosition)
                 adapter.notifyItemRemoved(viewHolder.adapterPosition)
+            }
+
+            override fun onChildDrawOver(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder?,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                super.onChildDrawOver(
+                    c,
+                    recyclerView,
+                    viewHolder,
+                    dX,
+                    dY,
+                    actionState,
+                    isCurrentlyActive
+                )
+
+                val view = viewHolder!!.itemView
+                val color = ColorDrawable(Color.rgb(255,0,0))
+                color.setBounds(view.left, view.top, dX.toInt(), view.bottom)
+
+                color.draw(c)
             }
         }
 
