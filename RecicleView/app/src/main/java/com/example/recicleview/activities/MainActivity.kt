@@ -30,7 +30,7 @@ class MainActivity : ClasseSelection, AppCompatActivity() {
         const val MAIN_ACTIVITY_RESULT_ID = "CLASS_RESULT"
     }
 
-    var classlist = mutableListOf(
+    val classlist = mutableListOf(
         Classe("turma 1", 2019),
         Classe("turma 2", 2019),
         Classe("turma 1", 2020),
@@ -104,7 +104,8 @@ class MainActivity : ClasseSelection, AppCompatActivity() {
         val listJson = savedInstanceState.getString("MY_DATA_ARRAY")?.let {
             val list = Gson().fromJson(it, Array<Classe>::class.java).toMutableList()
 
-            classlist = list
+            classlist.clear()
+            classlist.addAll(list)
             adapter.notifyDataSetChanged()
         }
     }
