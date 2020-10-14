@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">RecicleView</string>
+    <string name="name">name</string>
+    <string name="year">year</string>
 </resources>

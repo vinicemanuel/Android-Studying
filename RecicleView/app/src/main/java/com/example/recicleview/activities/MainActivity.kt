@@ -39,8 +39,8 @@ class MainActivity : ClasseSelection, AppCompatActivity() {
     val classlist = mutableListOf(
         Classe("turma 1", 2019),
         Classe("turma 2", 2019),
-        Classe("turma 1", 2020),
-        Classe("turma 2", 2020)
+        Classe("turma 3", 2020),
+        Classe("turma 4", 2020)
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
