@@ -71,7 +71,7 @@ class MainActivity : ClasseSelection, AppCompatActivity() {
         this.recycleView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         this.recycleView.layoutManager = LinearLayoutManager(this)
 
-        val itemTouchHelperCallBack = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+        val itemTouchHelperCallBack = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
             override fun onMove(
                 recyclerView: RecyclerView,
@@ -107,7 +107,7 @@ class MainActivity : ClasseSelection, AppCompatActivity() {
 
                 val view = viewHolder!!.itemView
                 val color = ColorDrawable(Color.rgb(255,0,0))
-                color.setBounds(view.left, view.top, dX.toInt(), view.bottom)
+                color.setBounds(view.right + dX.toInt(), view.top, view.right, view.bottom)
 
                 color.draw(c)
             }
