@@ -8,13 +8,16 @@ import android.os.PersistableBundle
 import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.recicleview.R
 import com.example.recicleview.adapter.ClasseAdapter
 import com.example.recicleview.adapter.ClasseSelection
 import com.example.recicleview.models.Classe
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 
 class MainActivity : ClasseSelection, AppCompatActivity() {
 
@@ -64,6 +67,26 @@ class MainActivity : ClasseSelection, AppCompatActivity() {
         this.recycleView.adapter = this.adapter
         this.recycleView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         this.recycleView.layoutManager = LinearLayoutManager(this)
+
+        val itemTouchHelperCallBack = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+               return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                classlist.removeAt(viewHolder.adapterPosition)
+                adapter.notifyItemRemoved(viewHolder.adapterPosition)
+            }
+        }
+
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallBack)
+        itemTouchHelper.attachToRecyclerView(recycleView)
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
