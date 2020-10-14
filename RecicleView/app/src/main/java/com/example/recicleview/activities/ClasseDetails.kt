@@ -10,48 +10,46 @@ import kotlinx.android.synthetic.main.activity_class_details.*
 
 class ClasseDetails : AppCompatActivity() {
 
-    val self = this
-
-    private lateinit var classe: Classe
+    private var classe: Classe? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_class_details)
         
         intent.getParcelableExtra<Classe>(MainActivity.MAIN_ACTIVITY_RESULT_ID)?.let {
-            self.nameEditText.setText(it.name)
-            self.yearEditText.setText(it.ano.toString())
+            this.nameEditText.setText(it.name)
+            this.yearEditText.setText(it.ano.toString())
             classe = it
         }
 
-        self.saveButton.setOnClickListener {
-            self.save()
+        this.saveButton.setOnClickListener {
+            this.save()
         }
     }
 
     private fun save() {
 
-        if (self.nameEditText.text.isBlank()) {
+        if (this.nameEditText.text.isBlank()) {
             //TODO: handle error
             return
         }
 
-        if (self.yearEditText.text.isBlank()) {
+        if (this.yearEditText.text.isBlank()) {
             //TODO: handle error
             return
         }
 
-        val name = self.nameEditText.text.toString()
-        val year = self.yearEditText.text.toString().toInt()
+        val name = this.nameEditText.text.toString()
+        val year = this.yearEditText.text.toString().toInt()
 
-        if (self.classe == null) {
+        if (this.classe == null) {
 
             val newClasse = Classe(name, year)
-            self.saveClasse(newClasse)
+            this.saveClasse(newClasse)
         } else {
-            self.classe!!.name = name
-            self.classe!!.ano = year
-            self.saveClasse(self.classe!!)
+            this.classe!!.name = name
+            this.classe!!.ano = year
+            this.saveClasse(this.classe!!)
         }
     }
 

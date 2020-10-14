@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -12,6 +13,7 @@ import com.example.recicleview.R
 import com.example.recicleview.adapter.ClasseAdapter
 import com.example.recicleview.adapter.ClasseSelection
 import com.example.recicleview.models.Classe
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : ClasseSelection, AppCompatActivity() {
@@ -19,7 +21,6 @@ class MainActivity : ClasseSelection, AppCompatActivity() {
     val TAG = "MainActivity"
 
     //porque sim, já tava chato toda hora trocar
-    private val self = this
 
     private  lateinit var adapter: ClasseAdapter
 
@@ -29,7 +30,7 @@ class MainActivity : ClasseSelection, AppCompatActivity() {
         const val MAIN_ACTIVITY_RESULT_ID = "CLASS_RESULT"
     }
 
-    val classlist = mutableListOf(
+    var classlist = mutableListOf(
         Classe("turma 1", 2019),
         Classe("turma 2", 2019),
         Classe("turma 1", 2020),
@@ -43,7 +44,7 @@ class MainActivity : ClasseSelection, AppCompatActivity() {
         this.setupRecyclerview()
 
         this.addButton.setOnClickListener {
-            self.add()
+            this.add()
         }
     }
 
@@ -59,10 +60,10 @@ class MainActivity : ClasseSelection, AppCompatActivity() {
     }
 
     private fun setupRecyclerview() {
-        self.adapter = ClasseAdapter(self, self.classlist, self)
-        self.recycleView.adapter = self.adapter
-        self.recycleView.addItemDecoration(DividerItemDecoration(self, DividerItemDecoration.VERTICAL))
-        self.recycleView.layoutManager = LinearLayoutManager(self)
+        this.adapter = ClasseAdapter(this, this.classlist, this)
+        this.recycleView.adapter = this.adapter
+        this.recycleView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        this.recycleView.layoutManager = LinearLayoutManager(this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -78,20 +79,39 @@ class MainActivity : ClasseSelection, AppCompatActivity() {
 
             } else if (requestCode == MAIN_ACTIVITY_EDIT_CLASSE_REQUEST_CODE) {
                 data?.getParcelableExtra<Classe>(MAIN_ACTIVITY_RESULT_ID)?.let { classe ->
-                    val index = self.classlist.indexOfFirst {filterClasse ->
+                    val index = this.classlist.indexOfFirst {filterClasse ->
                         filterClasse.classeID == classe.classeID
                     }
-                    self.classlist[index] = classe
-                    adapter.notifyDataSetChanged()
+
+                    if (index != -1) {
+                        this.classlist[index] = classe
+                        adapter.notifyDataSetChanged()
+                    }
                 }
             }
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        val jsonList = Gson().toJson(this.classlist)
+        outState.putString("MY_DATA_ARRAY", jsonList)
+        adapter.notifyDataSetChanged()
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        val listJson = savedInstanceState.getString("MY_DATA_ARRAY")?.let {
+            val list = Gson().fromJson(it, Array<Classe>::class.java).toMutableList()
+
+            classlist = list
+            adapter.notifyDataSetChanged()
+        }
+    }
+
     override fun clickAt(index: Int) {
-//        Log.d(TAG, "${self.classlist[index].name}")
         val myIntent = Intent("CLASSE_DETAIL_EDIT_ACTION")
-        myIntent.putExtra(MAIN_ACTIVITY_RESULT_ID, self.classlist[index])
+        myIntent.putExtra(MAIN_ACTIVITY_RESULT_ID, this.classlist[index])
         startActivityForResult(myIntent, MAIN_ACTIVITY_EDIT_CLASSE_REQUEST_CODE)
     }
 
