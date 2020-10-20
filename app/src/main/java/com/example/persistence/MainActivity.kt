@@ -3,10 +3,12 @@ package com.example.persistence
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
-import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.BufferedReader
+import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.io.InputStreamReader
 
 class MainActivity : AppCompatActivity() {
@@ -57,10 +59,33 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun writeExternal(value: String) {
-        val path = this.getExternalFilesDir(null)
+
+        if (this.isExternalStorageWritable()) {
+            FileOutputStream(this.externalFileName).use { output ->
+                output.write(value.toByteArray())
+            }
+        }
     }
 
     private fun readExternal(): String {
+
+        if (this.isExternalStorageReadable()) {
+            FileInputStream(this.externalFileName).use { stream ->
+                return stream.bufferedReader().use {
+                    it.readText()
+                }
+            }
+        }
+
         return ""
+    }
+
+    private fun isExternalStorageWritable(): Boolean {
+        return Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
+    }
+
+    private fun isExternalStorageReadable(): Boolean {
+        return Environment.getExternalStorageState() in
+                setOf(Environment.MEDIA_MOUNTED, Environment.MEDIA_MOUNTED_READ_ONLY)
     }
 }
