@@ -1,10 +1,14 @@
 package com.example.persistence
 
+import android.Manifest
+import android.app.Activity
 import android.content.Context
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
+import androidx.core.app.ActivityCompat
 import java.io.BufferedReader
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -60,10 +64,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun writeExternal(value: String) {
 
-        if (this.isExternalStorageWritable()) {
-            FileOutputStream(this.externalFileName).use { output ->
-                output.write(value.toByteArray())
+        if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+
+            if (this.isExternalStorageWritable()) {
+                FileOutputStream(this.externalFileName).use { output ->
+                    output.write(value.toByteArray())
+                }
             }
+
+        } else {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
         }
     }
 
