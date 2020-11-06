@@ -14,4 +14,5 @@
     <string name="description_language">Description Language</string>
     <string name="english_en">English (EN)</string>
     <string name="portuguese_pt">Portuguese (PT)</string>
+    <string name="save">Save</string>
 </resources>
