@@ -38,14 +38,14 @@ class SettingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         this.configPrefs()
-        this.configData(view)
         this.configTemperature(view)
         this.configLanguage(view)
         this.configSaveButton(view)
+        this.configData(view)
     }
 
     private fun configPrefs() {
-        this.prefs = context?.getSharedPreferences("my_weather_prefs", 0)
+        this.prefs = context?.getSharedPreferences("my_weather_prefs", Context.MODE_PRIVATE)
     }
 
     private fun configData(view: View) {
@@ -102,10 +102,9 @@ class SettingsFragment : Fragment() {
         this.saveButton.setOnClickListener {
             val editor = this.prefs?.edit()
 
-            editor?.apply {
-                putString("TEMPERATURE_UNIT", temperatureUnit)
-                putString("LANGUAGE", language)
-            }
+            editor?.putString("TEMPERATURE_UNIT", temperatureUnit)
+            editor?.putString("LANGUAGE", language)
+            editor?.apply()
         }
     }
 
