@@ -15,4 +15,8 @@
     <string name="english_en">English (EN)</string>
     <string name="portuguese_pt">Portuguese (PT)</string>
     <string name="save">Save</string>
+    <string name="btn_search_text">SEARCH</string>
+    <string name="please_add_a_city">Please add a city</string>
+    <string name="toast_online">online</string>
+    <string name="toast_offline">offline</string>
 </resources>

@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_favorite"
-        android:name="com.example.myweather.FavoriteFragment"
+        android:name="com.example.myweather.ui.FavoriteFragment"
         android:label="@string/favorites"
         tools:layout="@layout/fragment_favorite" />
 
     <fragment
         android:id="@+id/navigation_search"
-        android:name="com.example.myweather.SearchFragment"
+        android:name="com.example.myweather.ui.SearchFragment"
         android:label="@string/search"
         tools:layout="@layout/fragment_search" />
 
     <fragment
         android:id="@+id/navigation_settings"
-        android:name="com.example.myweather.SettingsFragment"
+        android:name="com.example.myweather.ui.SettingsFragment"
         android:label="@string/settings"
         tools:layout="@layout/fragment_settings" />
 </navigation>

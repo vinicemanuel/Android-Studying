@@ -1,4 +1,4 @@
-package com.example.myweather
+package com.example.myweather.ui
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import com.example.myweather.R
 
 /**
  * A simple [Fragment] subclass.
