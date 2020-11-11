@@ -1,5 +1,5 @@
 package com.example.myweather.model
 
-data class Weather(
+data class City(
     val id: Long,
     val name: String)
