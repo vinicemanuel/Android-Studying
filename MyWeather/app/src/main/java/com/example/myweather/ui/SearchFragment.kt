@@ -60,6 +60,7 @@ class SearchFragment : Fragment() {
                 val service = OpenWeatherManager().getOpenWeatherService()
                 val call = service.getCityWeather("recife")
                 call.enqueue(object: Callback<City> {
+
                     override fun onResponse(call: Call<City>, response: Response<City>) {
 
                         if (response.isSuccessful) {
@@ -68,8 +69,6 @@ class SearchFragment : Fragment() {
                         } else {
                             Log.e(TAG, "response city is not success")
                         }
-
-                        Log.e(TAG, "response is not success")
                     }
 
                     override fun onFailure(call: Call<City>, t: Throwable) {
