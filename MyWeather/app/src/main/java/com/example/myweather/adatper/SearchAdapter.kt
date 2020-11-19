@@ -1,5 +1,6 @@
 package com.example.myweather.adatper
 
+import android.content.Context
 import android.graphics.Rect
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +11,7 @@ import com.example.myweather.R
 import com.example.myweather.model.Element
 import kotlinx.android.synthetic.main.search_cell.view.*
 
-class SearchAdapter(val list: MutableList<Element>?): RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
+class SearchAdapter(val list: MutableList<Element>?, context: Context?): RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
         return SearchViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.search_cell, parent, false))
@@ -27,18 +28,29 @@ class SearchAdapter(val list: MutableList<Element>?): RecyclerView.Adapter<Searc
         return  this.list?.size ?: 0
     }
 
-    fun addItems(elements: MutableList<Element>) {
-        TODO("Not yet implemented")
+    fun configItems(elements: MutableList<Element>) {
+        list?.clear()
+        elements.forEach {
+            list?.add(it)
+        }
+        notifyDataSetChanged()
     }
 
     class SearchViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         private val textCityName = itemView.city_name
-        private val textcityCode = itemView.city_code
+        private val textCityCode = itemView.city_code
         private val iconWeather = itemView.weather_icon
 
         fun bind(element: Element) {
             this.textCityName.text = element.name
-            this.textcityCode.text = element.id.toString()
+            this.textCityCode.text = element.id.toString()
+
+            Glide.with(itemView.context)
+                .load("http://openweathermap.org/img/wn/${element.weather[0].icon}@4x.png")
+                .error(R.drawable.ic_baseline_error_outline_24)
+                .circleCrop()
+                .into(iconWeather)
+
         }
     }
 

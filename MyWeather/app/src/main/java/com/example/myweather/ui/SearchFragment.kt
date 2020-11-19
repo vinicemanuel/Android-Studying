@@ -36,7 +36,6 @@ import retrofit2.Response
 class SearchFragment : Fragment() {
 
     lateinit var searchButton: Button
-    lateinit var progressBar: ProgressBar
     lateinit var textSearch: EditText
     lateinit var recycleView: RecyclerView
     lateinit var saveButton: FloatingActionButton
@@ -60,7 +59,6 @@ class SearchFragment : Fragment() {
         configFloatingButton(view)
         configRecycleView(view)
         configTextSearch(view)
-        configProgress(view)
         configSearButton(view)
     }
 
@@ -73,16 +71,12 @@ class SearchFragment : Fragment() {
 
     private fun configRecycleView(view: View) {
         this.recycleView = view.findViewById(R.id.search_recycle)
-        this.recycleView.adapter = SearchAdapter(mutableListOf())
+        this.recycleView.adapter = SearchAdapter(mutableListOf(), context)
+          this.recycleView.addItemDecoration(SearchAdapter.SearchItemDecoration(30))
     }
 
     private fun configTextSearch(view: View) {
         this.textSearch = view.findViewById(R.id.text_search)
-    }
-
-    private fun configProgress(view: View) {
-        this.progressBar = view.findViewById(R.id.progressBar)
-        this.progressBar.visibility = View.GONE
     }
 
     private fun configSearButton(view: View) {
@@ -91,9 +85,7 @@ class SearchFragment : Fragment() {
         this.searchButton.setOnClickListener {
 
             if (this.isConnectivityAvailable()) {
-                Toast.makeText(context,getString(R.string.toast_online), Toast.LENGTH_LONG).show()
 
-                progressBar.visibility = View.VISIBLE
                 val city = this.textSearch.text.toString()
                 if (!city.isTrimEmpty()) {
                     getData(city)
@@ -111,7 +103,6 @@ class SearchFragment : Fragment() {
         call.enqueue(object: Callback<Root> {
 
             override fun onResponse(call: Call<Root>, response: Response<Root>) {
-                progressBar.visibility = View.GONE
 
                 if (response.isSuccessful) {
                     val root = response.body()
@@ -124,7 +115,6 @@ class SearchFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<Root>, t: Throwable) {
-                progressBar.visibility = View.GONE
                 Log.e(TAG, "response is not success")
             }
         })
@@ -136,9 +126,8 @@ class SearchFragment : Fragment() {
             elements.add(it)
         }
 
-        (this.recycleView.adapter as SearchAdapter).addItems(elements)
+        (this.recycleView.adapter as SearchAdapter).configItems(elements)
         this.recycleView.layoutManager = LinearLayoutManager(this.context)
-        this.recycleView.addItemDecoration(SearchAdapter.SearchItemDecoration(30))
     }
 
     @SuppressLint("WrongConstant")
