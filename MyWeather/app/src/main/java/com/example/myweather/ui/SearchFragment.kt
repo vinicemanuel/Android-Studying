@@ -15,11 +15,15 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.myweather.R
+import com.example.myweather.adatper.SearchAdapter
 import com.example.myweather.extensions.isTrimEmpty
 import com.example.myweather.manager.OpenWeatherManager
-import com.example.myweather.model.City
-import com.example.myweather.service.OpenWeatherService
+import com.example.myweather.model.Element
+import com.example.myweather.model.Root
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -34,6 +38,8 @@ class SearchFragment : Fragment() {
     lateinit var searchButton: Button
     lateinit var progressBar: ProgressBar
     lateinit var textSearch: EditText
+    lateinit var recycleView: RecyclerView
+    lateinit var saveButton: FloatingActionButton
 
     private val TAG = "SearchFragment"
 
@@ -50,9 +56,24 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        configFloatingButton(view)
+        configRecycleView(view)
         configTextSearch(view)
         configProgress(view)
         configSearButton(view)
+    }
+
+    private fun configFloatingButton(view: View) {
+        this.saveButton = view.findViewById(R.id.floatingActionButton)
+        this.saveButton.setOnClickListener {
+
+        }
+    }
+
+    private fun configRecycleView(view: View) {
+        this.recycleView = view.findViewById(R.id.search_recycle)
+        this.recycleView.adapter = SearchAdapter(mutableListOf())
     }
 
     private fun configTextSearch(view: View) {
@@ -69,13 +90,13 @@ class SearchFragment : Fragment() {
         this.searchButton = view.findViewById(R.id.button_search)
         this.searchButton.setOnClickListener {
 
-            if (this.isConectivityAvaliable()) {
+            if (this.isConnectivityAvailable()) {
                 Toast.makeText(context,getString(R.string.toast_online), Toast.LENGTH_LONG).show()
 
                 progressBar.visibility = View.VISIBLE
                 val city = this.textSearch.text.toString()
                 if (!city.isTrimEmpty()) {
-                    getCityData(city)
+                    getData(city)
                 }
 
             } else {
@@ -84,30 +105,44 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun getCityData(city: String) {
+    private fun getData(city: String) {
         val service = OpenWeatherManager().getOpenWeatherService()
-        val call = service.getCityWeather(city)
-        call.enqueue(object : Callback<City> {
+        val call = service.findTmperature(city)
+        call.enqueue(object: Callback<Root> {
 
-            override fun onResponse(call: Call<City>, response: Response<City>) {
+            override fun onResponse(call: Call<Root>, response: Response<Root>) {
                 progressBar.visibility = View.GONE
+
                 if (response.isSuccessful) {
-                    val city = response.body()
-                    Log.e(TAG, "response city is $city")
+                    val root = response.body()
+                    if (root is Root) {
+                        configSearchListData(root)
+                    }
                 } else {
-                    Log.e(TAG, "response city is not success")
+                    Log.e(TAG, "response is not success")
                 }
             }
 
-            override fun onFailure(call: Call<City>, t: Throwable) {
+            override fun onFailure(call: Call<Root>, t: Throwable) {
                 progressBar.visibility = View.GONE
                 Log.e(TAG, "response is not success")
             }
         })
     }
 
+    private fun configSearchListData(root: Root) {
+        val elements = mutableListOf<Element>()
+        root.list.forEach {
+            elements.add(it)
+        }
+
+        (this.recycleView.adapter as SearchAdapter).addItems(elements)
+        this.recycleView.layoutManager = LinearLayoutManager(this.context)
+        this.recycleView.addItemDecoration(SearchAdapter.SearchItemDecoration(30))
+    }
+
     @SuppressLint("WrongConstant")
-    private fun isConectivityAvaliable(): Boolean {
+    private fun isConnectivityAvailable(): Boolean {
         val manager = (context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
         var result = false
 
