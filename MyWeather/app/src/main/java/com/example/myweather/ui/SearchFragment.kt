@@ -103,7 +103,8 @@ class SearchFragment : Fragment() {
 
     private fun configRecycleView(view: View) {
         this.recycleView = view.findViewById(R.id.search_recycle)
-        this.recycleView.adapter = SearchAdapter(mutableListOf(), context)
+        this.recycleView.adapter = SearchAdapter(mutableListOf())
+        this.recycleView.layoutManager = LinearLayoutManager(this.context)
         this.recycleView.addItemDecoration(SearchAdapter.SearchItemDecoration(30))
     }
 
@@ -159,7 +160,6 @@ class SearchFragment : Fragment() {
         }
 
         (this.recycleView.adapter as SearchAdapter).configItems(elements)
-        this.recycleView.layoutManager = LinearLayoutManager(this.context)
     }
 
     @SuppressLint("WrongConstant")

@@ -11,7 +11,7 @@ import com.example.myweather.R
 import com.example.myweather.model.Element
 import kotlinx.android.synthetic.main.search_cell.view.*
 
-class SearchAdapter(val list: MutableList<Element>?, context: Context?): RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
+class SearchAdapter(private val list: MutableList<Element>?): RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
         return SearchViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.search_cell, parent, false))
