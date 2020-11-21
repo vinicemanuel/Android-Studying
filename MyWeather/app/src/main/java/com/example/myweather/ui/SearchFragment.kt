@@ -13,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,8 +20,11 @@ import com.example.myweather.R
 import com.example.myweather.adatper.SearchAdapter
 import com.example.myweather.extensions.isTrimEmpty
 import com.example.myweather.manager.OpenWeatherManager
+import com.example.myweather.model.City
 import com.example.myweather.model.Element
 import com.example.myweather.model.Root
+import com.example.myweather.room.database.AppDatabase
+import com.example.myweather.room.model.CityDatabase
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import retrofit2.Call
 import retrofit2.Callback
@@ -65,14 +67,44 @@ class SearchFragment : Fragment() {
     private fun configFloatingButton(view: View) {
         this.saveButton = view.findViewById(R.id.floatingActionButton)
         this.saveButton.setOnClickListener {
+            val city = textSearch.text.toString()
 
+            getCityData(city)
         }
+    }
+
+    private fun getCityData(city: String) {
+        val service = OpenWeatherManager().getOpenWeatherService()
+        val call = service.getCityWeather(city)
+        call.enqueue(object: Callback<City> {
+            override fun onResponse(call: Call<City>, response: Response<City>) {
+
+                if (response.isSuccessful) {
+
+                    response.body()?.let { city ->
+                        context?.let { myContext ->
+                            val database = AppDatabase.getInstance(myContext)
+                            val result = database?.cityDatabaseDAO()?.save(CityDatabase(city.id, city.name))
+                            Toast.makeText(myContext, "Result: $result", Toast.LENGTH_LONG).show()
+                        }
+                    }
+
+                } else {
+                    Log.e(TAG, "response is not success")
+                }
+
+            }
+
+            override fun onFailure(call: Call<City>, t: Throwable) {
+                Log.e(TAG, "response is not success")
+            }
+        })
     }
 
     private fun configRecycleView(view: View) {
         this.recycleView = view.findViewById(R.id.search_recycle)
         this.recycleView.adapter = SearchAdapter(mutableListOf(), context)
-          this.recycleView.addItemDecoration(SearchAdapter.SearchItemDecoration(30))
+        this.recycleView.addItemDecoration(SearchAdapter.SearchItemDecoration(30))
     }
 
     private fun configTextSearch(view: View) {
@@ -88,7 +120,7 @@ class SearchFragment : Fragment() {
 
                 val city = this.textSearch.text.toString()
                 if (!city.isTrimEmpty()) {
-                    getData(city)
+                    getListData(city)
                 }
 
             } else {
@@ -97,7 +129,7 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun getData(city: String) {
+    private fun getListData(city: String) {
         val service = OpenWeatherManager().getOpenWeatherService()
         val call = service.findTmperature(city)
         call.enqueue(object: Callback<Root> {
