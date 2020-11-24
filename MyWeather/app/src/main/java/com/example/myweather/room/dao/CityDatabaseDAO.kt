@@ -1,9 +1,6 @@
 package com.example.myweather.room.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.example.myweather.room.model.CityDatabase
 
 @Dao
@@ -13,4 +10,7 @@ interface CityDatabaseDAO {
 
     @Query("SELECT * FROM CityDatabase")
     fun getAllCitiesDatabase(): List<CityDatabase>
+
+    @Delete
+    fun delete(city: CityDatabase)
 }

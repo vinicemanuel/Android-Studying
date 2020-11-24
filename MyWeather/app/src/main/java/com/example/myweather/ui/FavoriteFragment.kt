@@ -8,17 +8,18 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myweather.R
-import com.example.myweather.adatper.FavoritiesAdatper
-import com.example.myweather.adatper.SearchAdapter
+import com.example.myweather.adatper.DeleteCityDelegate
+import com.example.myweather.adatper.FavoritesAdapter
 import com.example.myweather.model.City
 import com.example.myweather.room.database.AppDatabase
+import com.example.myweather.room.model.CityDatabase
 
 /**
  * A simple [Fragment] subclass.
  * Use the [FavoriteFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FavoriteFragment : Fragment() {
+class FavoriteFragment : Fragment(), DeleteCityDelegate {
 
     lateinit var recycleView: RecyclerView
 
@@ -38,27 +39,34 @@ class FavoriteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         this.configRecycleView(view)
+        this.loadRecycleViewData(this.getFavorites())
+    }
 
-        (this.recycleView.adapter as FavoritiesAdatper).configItems(this.getFavorites())
+    private fun loadRecycleViewData(list: List<City>) {
+        (this.recycleView.adapter as FavoritesAdapter).configItems(list)
+    }
+
+    override fun delete(city: City) {
+        val cityDatabase = CityDatabase(city.id, city.name)
+        this.getDatabase()?.cityDatabaseDAO()?.delete(cityDatabase)
+        (this.recycleView.adapter as FavoritesAdapter).delete(city)
+    }
+
+    private fun getDatabase(): AppDatabase? {
+        return context?.let { myContext ->
+            AppDatabase.getInstance(myContext)
+        }
     }
 
     private fun getFavorites(): List<City> {
-
-        var cityList: List<City> = listOf()
-
-        context?.let { myContext ->
-            val database = AppDatabase.getInstance(myContext)
-            val list = database?.cityDatabaseDAO()?.getAllCitiesDatabase()
-            cityList = list?.map { City(it.id, it.cityName) } ?: listOf()
-        }
-
-        return cityList
+        val list = this.getDatabase()?.cityDatabaseDAO()?.getAllCitiesDatabase()
+        return list?.map { City(it.id, it.cityName) } ?: listOf()
     }
 
     private fun configRecycleView(view: View) {
         this.recycleView = view.findViewById(R.id.favorites_recycleview)
-        this.recycleView.adapter = FavoritiesAdatper(mutableListOf())
+        this.recycleView.adapter = FavoritesAdapter(mutableListOf(),this)
         this.recycleView.layoutManager = LinearLayoutManager(this.context)
-        this.recycleView.addItemDecoration(FavoritiesAdatper.FavoritesItemDecoration(30))
+        this.recycleView.addItemDecoration(FavoritesAdapter.FavoritesItemDecoration(30))
     }
 }

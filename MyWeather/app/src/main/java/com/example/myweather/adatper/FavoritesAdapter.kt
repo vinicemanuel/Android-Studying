@@ -7,15 +7,18 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myweather.R
 import com.example.myweather.model.City
-import com.example.myweather.model.Element
 import kotlinx.android.synthetic.main.favority_cell.view.*
-import kotlinx.android.synthetic.main.search_cell.view.*
 
-class FavoritiesAdatper(private val list: MutableList<City>?): RecyclerView.Adapter<FavoritiesAdatper.FavoritesViewHolder>() {
+interface DeleteCityDelegate{
+    fun delete(city: City)
+}
+
+class FavoritesAdapter(private val list: MutableList<City>?, private val deleteDelegate: DeleteCityDelegate?): RecyclerView.Adapter<FavoritesAdapter.FavoritesViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoritesViewHolder {
-        return FavoritiesAdatper.FavoritesViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.favority_cell, parent, false)
+        return FavoritesAdapter.FavoritesViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.favority_cell, parent, false),
+                deleteDelegate
         )
     }
 
@@ -38,14 +41,24 @@ class FavoritiesAdatper(private val list: MutableList<City>?): RecyclerView.Adap
         notifyDataSetChanged()
     }
 
-    class FavoritesViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    fun delete(city: City) {
+        this.list?.remove(city)
+        this.notifyDataSetChanged()
+    }
+
+    class FavoritesViewHolder(itemView: View, private val deleteDelegate: DeleteCityDelegate?): RecyclerView.ViewHolder(itemView) {
 
         private val textCityName = itemView.textview_favority_city_name
         private val textCityCode = itemView.textview_favority_city_id
+        private val deleteButton = itemView.delete_button
 
         fun bind(city: City) {
             this.textCityCode.text = city.id.toString()
             this.textCityName.text = city.name
+            this.deleteButton.setOnClickListener {
+                deleteDelegate?.delete(city)
+
+            }
         }
     }
 
