@@ -24,6 +24,10 @@ class RebootBroadcast: BroadcastReceiver() {
         if (intent?.action == Intent.ACTION_REBOOT) {
             Log.d(TAG, "sistema reinicializado")
         }
+
+        if (intent?.action == "MY_CUSTOM_ACTION_ON_MANIFEST") {
+            Log.d(TAG, "Chamada registrada no manigest")
+        }
     }
 
 }

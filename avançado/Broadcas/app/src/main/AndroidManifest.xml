@@ -25,6 +25,8 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED"/>
                 <action android:name="android.intent.action.REBOOT"/>
+
+                <action android:name="MY_CUSTOM_ACTION_ON_MANIFEST"/>
             </intent-filter>
         </receiver>
 

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">BroadcasExercice</string>
+    <string name="android_8_sdk_26"><![CDATA[Android 8< (SDK< 26)]]></string>
+    <string name="android_8_sdk_26_greater"><![CDATA[Android >=8 (SDK>= 26)]]></string>
 </resources>
