@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".RebootBroadcast">
+        <receiver android:name=".ManifestBroadcast">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED"/>

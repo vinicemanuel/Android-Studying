@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 
-class RebootBroadcast: BroadcastReceiver() {
+class ManifestBroadcast: BroadcastReceiver() {
 
     val TAG = "RebootBroadcast"
 
