@@ -24,7 +24,6 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, ManifestBroadcast::class.java).also {
                 it.action = "MY_CUSTOM_ACTION_ON_MANIFEST"
                 sendBroadcast(it)
-
             }
         }
 
@@ -35,7 +34,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         buttonOpenApp.setOnClickListener {
-
+            val intent = Intent("MY_CUSTOM_ACTION_TO_OPEN_APP").also {
+                it.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+                sendBroadcast(it)
+            }
         }
     }
 
