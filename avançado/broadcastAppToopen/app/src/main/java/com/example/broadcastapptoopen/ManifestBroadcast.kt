@@ -13,6 +13,10 @@ class ManifestBroadcast: BroadcastReceiver() {
 
         if (intent?.action == "MY_CUSTOM_ACTION_TO_OPEN_APP") {
             context?.startActivity(Intent(context, MainActivity::class.java))
+            val extraValue = intent.extras?.getString("THE_KEY")
+            if (extraValue != null) {
+                Log.d(TAG, extraValue)
+            }
         }
     }
 }

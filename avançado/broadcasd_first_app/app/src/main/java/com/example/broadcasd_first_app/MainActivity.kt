@@ -13,6 +13,7 @@ class MainActivity : AppCompatActivity() {
         button.setOnClickListener {
             val intent = Intent("MY_CUSTOM_ACTION_TO_OPEN_APP").also {
                 it.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+                it.putExtra("THE_KEY", "this is a value")
                 sendBroadcast(it)
             }
         }
