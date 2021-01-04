@@ -19,7 +19,8 @@
 
         <receiver android:name=".ManifestBroadcast"
             android:enabled="true"
-            android:exported="true">
+            android:exported="true"
+            android:permission="com.example.broadcastapptoopen.MY_RECEIVER_PERMISSION">
             <intent-filter>
                 <action android:name="MY_CUSTOM_ACTION_TO_OPEN_APP"/>
             </intent-filter>
